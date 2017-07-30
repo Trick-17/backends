@@ -8,6 +8,7 @@ namespace backends
     T sum(vector<T>& vec)
     {
         T ret = 0;
+        #pragma omp parallel for reduction(+:ret)
         for (unsigned int i = 0; i<vec.size(); ++i)
         {
             ret += vec[i];

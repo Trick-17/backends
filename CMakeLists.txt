@@ -2,7 +2,11 @@ MESSAGE( STATUS ">> ------------------------------------------------------------
 MESSAGE( STATUS ">> --------------------- Backends ------------------------------------- <<" )
 
 ######### CMake Version #####################
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+### We need at least C++11
+set (CMAKE_CXX_STANDARD 11)
+### Distinction between Clang and AppleClang
+cmake_policy(SET CMP0025 NEW)
 #############################################
 
 
@@ -33,10 +37,16 @@ set(BACKENDS_META_VERSION              "${META_VERSION}" PARENT_SCOPE)
 set(BACKENDS_META_NAME_VERSION         "${META_PROJECT_NAME} v${META_VERSION} (${META_VERSION_REVISION})" PARENT_SCOPE)
 #############################################
 
+
 ######### Project Name ######################
 project(${META_PROJECT_NAME} VERSION ${BACKENDS_META_VERSION})
 #############################################
 
+
+# #############################################
+# SET( BACKENDS_USE_CUDA          OFF  CACHE BOOL "Use CUDA to speed up certain parts of the code." )
+SET( BACKENDS_USE_OPENMP        OFF  CACHE BOOL "Use OpenMP to speed up certain parts of the code." )
+# #############################################
 
 
 # ######### CUDA decisions ####################
@@ -49,6 +59,24 @@ project(${META_PROJECT_NAME} VERSION ${BACKENDS_META_VERSION})
 #     set( CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -arch=sm_60 --expt-relaxed-constexpr" )
 # endif()
 # #############################################
+
+
+#############################################
+if ( BACKENDS_USE_OPENMP )
+	include( FindOpenMP )
+    if( OPENMP_FOUND )
+        set( CMAKE_C_FLAGS          "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}" )
+        set( CMAKE_CXX_FLAGS        "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}" )
+        set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}" )
+		message( STATUS ">> OpenMP found." )
+		message( STATUS ">> OpenMP C Flags:          ${OpenMP_C_FLAGS}" )
+		message( STATUS ">> OpenMP CXX Flags:        ${OpenMP_CXX_FLAGS}" )
+		message( STATUS ">> OpenMP EXE Linker Flags: ${OpenMP_EXE_LINKER_FLAGS}" )
+	else( OPENMP_FOUND )
+		message( STATUS ">> WARNING: OpenMP could not be found." )
+	endif( OPENMP_FOUND )
+endif( )
+#############################################
 
 
 ######### Where to search for library headers
