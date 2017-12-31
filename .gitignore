@@ -6,6 +6,15 @@ build/*
 
 # Created by https://www.gitignore.io/api/c++,cmake,cuda,windows,osx,linux
 
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history
+
+
 ### C++ ###
 # Prerequisites
 *.d

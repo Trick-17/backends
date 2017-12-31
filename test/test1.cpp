@@ -13,9 +13,9 @@ TEST_CASE( "algorithm", "[algorithm]" )
 
 TEST_CASE( "reduction", "[reduction]" )
 {
-	auto myVec = backends::vector<float>{1, 2, 3, 4};
-	float sum  = backends::sum(myVec);
-	float mean = backends::mean(myVec);
+    auto myVec = backends::vector<float>{1, 2, 3, 4};
+    float sum  = backends::sum(myVec);
+    float mean = backends::mean(myVec);
     REQUIRE( sum  == 10 );
     REQUIRE( mean == Approx(2.5f).epsilon(0.01));
 }
